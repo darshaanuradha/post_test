@@ -1,117 +1,97 @@
 {% extends "layout.html" %}
+{% block title %}
+    Sign In - Welcome Back
+{% endblock title %}
 {% block content %}
-    <div class="login-wrapper">
-        <div class="login-card">
-            <h1>Welcome back</h1>
-            <p class="subtitle">Sign in to continue</p>
-            <form action="{% url 'users:login' %}" method="post" novalidate>
-                {% csrf_token %}
-                {% if form.non_field_errors %}<div class="alert">{{ form.non_field_errors }}</div>{% endif %}
-                <div class="field-group">
-                    <label for="{{ form.username.id_for_label }}">Username</label>
-                    {{ form.username }}
-                    {% if form.username.errors %}<small class="error">{{ form.username.errors|striptags }}</small>{% endif %}
-                </div>
-                <div class="field-group">
-                    <label for="{{ form.password.id_for_label }}">Password</label>
-                    {{ form.password }}
-                    {% if form.password.errors %}<small class="error">{{ form.password.errors|striptags }}</small>{% endif %}
-                </div>
-                <button type="submit" class="btn-login">Login</button>
-            </form>
+    <div class=" bg-gray-50 flex flex-col justify-center py-2 ">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
+            <div class="mx-auto w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg mb-4">
+                <svg class="w-7 h-7 text-white"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+            <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Welcome back</h2>
+            <p class="mt-2 text-sm text-gray-600">Please sign in to your account</p>
+        </div>
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-gray-100">
+                <form class="space-y-6"
+                      action="{% url 'users:login' %}"
+                      method="post"
+                      novalidate>
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="rounded-md bg-red-50 p-4 border-l-4 border-red-500">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.78 7.5a.75.75 0 011.5 0v2.5a.75.75 0 01-1.5 0v-2.5zm.72 4.25a.75.75 0 100 1.5.75.75 0 000-1.5z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-red-800">{{ form.non_field_errors|striptags }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}" />{% endif %}
+                    <div class="django-input-wrapper">
+                        <label for="{{ form.username.id_for_label }}"
+                               class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <p class="mt-1.5 text-sm text-red-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                                {{ form.username.errors|striptags }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="django-input-wrapper">
+                        <label for="{{ form.password.id_for_label }}"
+                               class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <p class="mt-1.5 text-sm text-red-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                                {{ form.password.errors|striptags }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <button type="submit"
+                                class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ease-in-out">
+                            Sign in
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     <style>
-    .login-wrapper {
-        min-height: 80vh;
-        display: grid;
-        place-items: center;
-        padding: 24px;
-        background: linear-gradient(135deg, #f8fafc, #eef2ff);
-    }
+        .django-input-wrapper input {
+            display: block;
+            width: 100%;
+            padding: 0.625rem 0.875rem; /* py-2.5 px-3.5 */
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.25rem;
+            color: #111827; /* text-gray-900 */
+            outline: none;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
 
-    .login-card {
-        width: 100%;
-        max-width: 420px;
-        background: #fff;
-        border-radius: 16px;
-        padding: 28px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    }
-
-    .login-card h1 {
-        margin: 0;
-        font-size: 1.6rem;
-        color: #0f172a;
-    }
-
-    .subtitle {
-        margin: 8px 0 20px;
-        color: #64748b;
-        font-size: 0.95rem;
-    }
-
-    .field-group {
-        margin-bottom: 14px;
-    }
-
-    .field-group label {
-        display: block;
-        margin-bottom: 6px;
-        font-size: 0.9rem;
-        color: #334155;
-        font-weight: 600;
-    }
-
-    .login-card input[type="text"],
-    .login-card input[type="password"],
-    .login-card input[type="email"] {
-        width: 100%;
-        padding: 11px 12px;
-        border: 1px solid #cbd5e1;
-        border-radius: 10px;
-        font-size: 0.95rem;
-        outline: none;
-        transition: border-color .2s, box-shadow .2s;
-        box-sizing: border-box;
-    }
-
-    .login-card input:focus {
-        border-color: #4f46e5;
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-    }
-
-    .btn-login {
-        width: 100%;
-        margin-top: 8px;
-        padding: 11px 14px;
-        border: 0;
-        border-radius: 10px;
-        background: #4f46e5;
-        color: #fff;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background .2s;
-    }
-
-    .btn-login:hover {
-        background: #4338ca;
-    }
-
-    .alert {
-        margin-bottom: 12px;
-        padding: 10px 12px;
-        border-radius: 8px;
-        background: #fee2e2;
-        color: #991b1b;
-        font-size: 0.9rem;
-    }
-
-    .error {
-        display: block;
-        margin-top: 6px;
-        color: #b91c1c;
-        font-size: 0.8rem;
-    }
+        .django-input-wrapper input:focus {
+            border-color: #3b82f6; /* border-blue-500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); /* focus:ring-blue-500 */
+        }
     </style>
 {% endblock content %}

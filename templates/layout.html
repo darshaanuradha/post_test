@@ -5,124 +5,193 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description"
-          content="Welcome to My Django App. A modern web application built with Django." />
-    <meta name="keywords" content="Django, Web App, Python, Development" />
+          content="Welcome to Anuradha's Blog. A modern web application built with Django." />
+    <meta name="keywords" content="Blog, Django, Web App, Python, Development" />
     <title>
       {% block title %}
-        My Django App
+        Anuradha's Blog
       {% endblock title %}
     </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
     <script defer src="{% static 'js/main.js' %}"></script>
   </head>
-  <body class="bg-slate-50 flex flex-col min-h-screen text-slate-900">
-    <!-- Header -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-          <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-            <span class="text-white font-bold text-lg">D</span>
+  <body class="bg-slate-50 font-sans text-slate-900 antialiased flex flex-col min-h-screen">
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <a href="{% url 'home' %}"
+             class="flex items-center gap-3 group focus:outline-none">
+            <div class="w-9 h-9 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300">
+              <span class="text-white font-bold text-lg">A</span>
+            </div>
+            <h1 class="text-xl font-bold text-slate-800 tracking-tight group-hover:text-blue-600 transition-colors duration-300">
+              Anuradha's Blog
+            </h1>
+          </a>
+          <!-- Desktop Navigation -->
+          <nav class="hidden lg:flex items-center gap-2">
+            <a href="{% url 'home' %}"
+               class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {% if request.resolver_match.url_name == 'home' %}bg-slate-100 text-blue-600{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+              Home
+            </a>
+            <a href="{% url 'about' %}"
+               class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {% if request.resolver_match.url_name == 'about' %}bg-slate-100 text-blue-600{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+              About
+            </a>
+            <a href="{% url 'post:list' %}"
+               class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {% if request.resolver_match.view_name == 'post:list' %}bg-slate-100 text-blue-600{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+              Posts
+            </a>
+            <a href="{% url 'contact' %}"
+               class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {% if request.resolver_match.url_name == 'contact' %}bg-slate-100 text-blue-600{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %}">
+              Contact
+            </a>
+          </nav>
+          <!-- Desktop Actions -->
+          <div class="hidden lg:flex items-center gap-4">
+            {% if user.is_authenticated %}
+              <a href="{% url 'post:new-post' %}"
+                 class="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="h-4 w-4"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Create Post
+              </a>
+              <div class="h-5 w-px bg-slate-300"></div>
+              <form action="{% url 'users:logout' %}" method="post" class="m-0">
+                {% csrf_token %}
+                <button type="submit"
+                        class="text-sm font-medium text-slate-600 hover:text-red-600 transition-colors duration-200">
+                  Log out
+                </button>
+              </form>
+            {% else %}
+              <a href="{% url 'users:login' %}"
+                 class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors duration-200">
+                Log in
+              </a>
+              <a href="{% url 'users:register' %}"
+                 class="px-4 py-2 rounded-md text-sm font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-all duration-200 shadow-sm">
+                Register
+              </a>
+            {% endif %}
           </div>
-          <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Django App
-          </h1>
+          <!-- Mobile Menu Button -->
+          <div class="lg:hidden flex items-center">
+            <button id="mobile-menu-btn"
+                    class="p-2 -mr-2 text-slate-600 hover:text-slate-900 focus:outline-none rounded-md hover:bg-slate-100 transition-colors">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
         </div>
-        <div class="hidden md:flex items-center gap-1">
-          <!-- Nav links will be here -->
+      </div>
+      <!-- Mobile Menu -->
+      <div id="mobile-menu"
+           class="hidden lg:hidden border-t border-slate-200 bg-white">
+        <div class="px-4 pt-2 pb-4 space-y-1">
+          <a href="{% url 'home' %}"
+             class="block px-3 py-2 rounded-md text-base font-medium {% if request.resolver_match.url_name == 'home' %}bg-slate-50 text-blue-600{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-900{% endif %}">Home</a>
+          <a href="{% url 'about' %}"
+             class="block px-3 py-2 rounded-md text-base font-medium {% if request.resolver_match.url_name == 'about' %}bg-slate-50 text-blue-600{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-900{% endif %}">About</a>
+          <a href="{% url 'post:list' %}"
+             class="block px-3 py-2 rounded-md text-base font-medium {% if request.resolver_match.view_name == 'post:list' %}bg-slate-50 text-blue-600{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-900{% endif %}">Posts</a>
+          <a href="{% url 'contact' %}"
+             class="block px-3 py-2 rounded-md text-base font-medium {% if request.resolver_match.url_name == 'contact' %}bg-slate-50 text-blue-600{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-900{% endif %}">Contact</a>
+          <div class="mt-4 pt-4 border-t border-slate-200 space-y-2">
+            {% if user.is_authenticated %}
+              <a href="{% url 'post:new-post' %}"
+                 class="block w-full text-center px-4 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700">Create Post</a>
+              <form action="{% url 'users:logout' %}" method="post" class="w-full">
+                {% csrf_token %}
+                <button type="submit"
+                        class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:bg-red-50 hover:text-red-600">
+                  Log out
+                </button>
+              </form>
+            {% else %}
+              <a href="{% url 'users:login' %}"
+                 class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900">Log in</a>
+              <a href="{% url 'users:register' %}"
+                 class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900">Register</a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </header>
-    <!-- Navigation -->
-    <nav class="bg-white border-b border-slate-200 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-wrap items-center justify-between py-4 gap-4">
-          <div class="flex flex-wrap gap-2">
-            <a href="{% url 'home' %}"
-               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.url_name == 'home' %}bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
-              🏠 Home
-            </a>
-            <a href="{% url 'about' %}"
-               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.url_name == 'about' %}bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
-              ℹ️ About
-            </a>
-            <a href="{% url 'contact' %}"
-               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.url_name == 'contact' %}bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
-              📧 Contact
-            </a>
-            <a href="{% url 'post:list' %}"
-               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.view_name == 'post:list' %} bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
-              📝 Posts
-            </a>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <a href="{% url 'users:register' %}"
-               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.view_name == 'users:register' %}bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
-              Register
-            </a>
-            <a href="{% url 'users:login' %}"
-               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.view_name == 'users:login' %}bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
-              Login
-            </a>
-            <form action="{% url 'users:logout' %}" method="post" class="inline">
-              {% csrf_token %}
-              <button type="submit"
-                      class="px-4 py-2 rounded-lg font-medium text-slate-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200">
-                Logout
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </nav>
     <!-- Main Content -->
-    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+      {% if messages %}
+        <div class="mb-6 space-y-2">
+          {% for message in messages %}
+            <div class="p-4 rounded-md text-sm {% if message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200{% elif message.tags == 'success' %}bg-green-50 text-green-800 border border-green-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
       {% block content %}
       {% endblock content %}
     </main>
     <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-100 mt-12 border-t border-slate-800">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          <div>
-            <h3 class="font-bold text-white mb-4">About</h3>
-            <p class="text-slate-400 text-sm">A modern web application built with Django and Tailwind CSS.</p>
+    <footer class="bg-slate-900 text-slate-300 text-sm py-8 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-2">
+            <div class="w-5 h-5 bg-gradient-to-br from-blue-600 to-indigo-600 rounded flex items-center justify-center">
+              <span class="text-white font-bold text-xs">A</span>
+            </div>
+            <p class="text-slate-400">© {% now "Y" %} Anuradha's Blog</p>
           </div>
-          <div>
-            <h3 class="font-bold text-white mb-4">Quick Links</h3>
-            <ul class="text-slate-400 text-sm space-y-2">
-              <li>
-                <a href="{% url 'home' %}" class="hover:text-white transition">Home</a>
-              </li>
-              <li>
-                <a href="{% url 'post:list' %}" class="hover:text-white transition">Posts</a>
-              </li>
-            </ul>
+          <div class="flex gap-6 text-slate-400">
+            <a href="{% url 'home' %}" class="hover:text-blue-400 transition-colors">Home</a>
+            <a href="{% url 'post:list' %}"
+               class="hover:text-blue-400 transition-colors">Posts</a>
+            <a href="{% url 'about' %}"
+               class="hover:text-blue-400 transition-colors">About</a>
+            <a href="{% url 'contact' %}"
+               class="hover:text-blue-400 transition-colors">Contact</a>
           </div>
-          <div>
-            <h3 class="font-bold text-white mb-4">Contact</h3>
-            <p class="text-slate-400 text-sm">Get in touch with us</p>
-          </div>
-        </div>
-        <div class="border-t border-slate-800 pt-8 text-center text-slate-400 text-sm">
-          <p>© 2024 My Django App. All rights reserved.</p>
         </div>
       </div>
     </footer>
-    <style>
-      @keyframes slideDown {
-        from {
-          opacity: 0;
-          transform: translateY(-10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      body {
-        animation: slideDown 0.3s ease-out;
-      }
-    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.getElementById('menu-icon');
+
+        btn.addEventListener('click', () => {
+          menu.classList.toggle('hidden');
+          if (menu.classList.contains('hidden')) {
+            icon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+          } else {
+            icon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+          }
+        });
+      });
+    </script>
   </body>
 </html>

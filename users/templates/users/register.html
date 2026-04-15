@@ -1,141 +1,117 @@
 {% extends "layout.html" %}
 {% block title %}
-    Register
+    Register - Create Account
 {% endblock title %}
 {% block content %}
-    <style>
-    :root {
-        --bg1: #0f172a;
-        --bg2: #1e293b;
-        --card: rgba(255, 255, 255, 0.08);
-        --text: #e2e8f0;
-        --muted: #94a3b8;
-        --accent: #6366f1;
-        --accent-hover: #4f46e5;
-        --danger: #f87171;
-        --border: rgba(148, 163, 184, 0.25);
-    }
-
-    .register-page {
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 2rem 1rem;
-        background: radial-gradient(1200px 600px at 10% 10%, #1d4ed8 0%, transparent 50%),
-                                radial-gradient(1000px 500px at 90% 90%, #7c3aed 0%, transparent 50%),
-                                linear-gradient(135deg, var(--bg1), var(--bg2));
-    }
-
-    .register-card {
-        width: 100%;
-        max-width: 460px;
-        background: var(--card);
-        backdrop-filter: blur(12px);
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-        padding: 1.6rem;
-        color: var(--text);
-    }
-
-    .register-title {
-        margin: 0 0 .25rem;
-        font-size: 1.6rem;
-        font-weight: 700;
-    }
-
-    .register-subtitle {
-        margin: 0 0 1.2rem;
-        color: var(--muted);
-        font-size: .95rem;
-    }
-
-    .form-group {
-        margin-bottom: 1rem;
-    }
-
-    .form-label {
-        display: block;
-        margin-bottom: .4rem;
-        font-size: .9rem;
-        color: #cbd5e1;
-    }
-
-    .form-help {
-        display: block;
-        margin-top: .4rem;
-        color: var(--muted);
-        font-size: .8rem;
-        line-height: 1.35;
-    }
-
-    .errorlist {
-        list-style: none;
-        margin: .35rem 0 0;
-        padding: 0;
-        color: var(--danger);
-        font-size: .85rem;
-    }
-
-    .register-card input,
-    .register-card select,
-    .register-card textarea {
-        width: 100%;
-        border: 1px solid var(--border);
-        background: rgba(15, 23, 42, 0.7);
-        color: var(--text);
-        border-radius: 10px;
-        padding: .72rem .85rem;
-        outline: none;
-        transition: border-color .2s, box-shadow .2s, background .2s;
-    }
-
-    .register-card input:focus,
-    .register-card select:focus,
-    .register-card textarea:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
-        background: rgba(15, 23, 42, 0.9);
-    }
-
-    .btn-register {
-        width: 100%;
-        border: none;
-        border-radius: 10px;
-        padding: .8rem 1rem;
-        font-weight: 600;
-        color: white;
-        background: var(--accent);
-        cursor: pointer;
-        transition: transform .06s ease, background .2s ease;
-    }
-
-    .btn-register:hover { background: var(--accent-hover); }
-    .btn-register:active { transform: translateY(1px); }
-
-    .non-field-errors {
-        margin-bottom: 1rem;
-        color: var(--danger);
-        font-size: .9rem;
-    }
-    </style>
-    <div class="register-page">
-        <div class="register-card">
-            <h1 class="register-title">Create your account</h1>
-            <p class="register-subtitle">Start in seconds with a clean and secure sign-up flow.</p>
-            <form action="{% url 'users:register' %}" method="post" novalidate>
-                {% csrf_token %}
-                {% if form.non_field_errors %}<div class="non-field-errors">{{ form.non_field_errors }}</div>{% endif %}
-                {% for field in form %}
-                    <div class="form-group">
-                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.help_text %}<small class="form-help">{{ field.help_text|safe }}</small>{% endif %}
-                        {{ field.errors }}
+    <div class=" bg-gray-50 flex flex-col justify-center py-2">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
+            <div class="mx-auto w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg mb-4">
+                <svg class="w-6 h-6 text-white"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+            </div>
+            <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Create your account</h2>
+            <p class="mt-2 text-sm text-gray-600">Join us today. It only takes a few seconds.</p>
+        </div>
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-gray-100">
+                <form class="space-y-5"
+                      action="{% url 'users:register' %}"
+                      method="post"
+                      novalidate>
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="rounded-md bg-red-50 p-4 border-l-4 border-red-500 mb-6">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.78 7.5a.75.75 0 011.5 0v2.5a.75.75 0 01-1.5 0v-2.5zm.72 4.25a.75.75 0 100 1.5.75.75 0 000-1.5z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-red-800">{{ form.non_field_errors|striptags }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% for field in form %}
+                        <div class="django-input-wrapper">
+                            <label for="{{ field.id_for_label }}"
+                                   class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <p class="mt-1.5 text-xs text-gray-500 leading-relaxed">{{ field.help_text|safe }}</p>
+                            {% endif %}
+                            {% if field.errors %}{{ field.errors }}{% endif %}
+                        </div>
+                    {% endfor %}
+                    <div class="pt-2">
+                        <button type="submit"
+                                class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out">
+                            Create account
+                        </button>
                     </div>
-                {% endfor %}
-                <button type="submit" class="btn-register">Create account</button>
-            </form>
+                </form>
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Already have an account?
+                        <a href="{% url 'users:login' %}"
+                           class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">Sign in here</a>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
+    <style>
+        /* Style the default input, select, and textarea fields */
+        .django-input-wrapper input,
+        .django-input-wrapper select,
+        .django-input-wrapper textarea {
+            display: block;
+            width: 100%;
+            padding: 0.625rem 0.875rem; /* py-2.5 px-3.5 */
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.25rem;
+            color: #111827; /* text-gray-900 */
+            background-color: #ffffff;
+            outline: none;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        /* Focus states for inputs */
+        .django-input-wrapper input:focus,
+        .django-input-wrapper select:focus,
+        .django-input-wrapper textarea:focus {
+            border-color: #4f46e5; /* border-indigo-600 */
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); /* focus:ring-indigo-500 */
+        }
+
+        /* Clean up Django's default <ul> error list formatting */
+        .django-input-wrapper ul.errorlist {
+            list-style-type: none;
+            padding: 0;
+            margin: 0.5rem 0 0 0;
+        }
+
+        .django-input-wrapper ul.errorlist li {
+            color: #dc2626; /* text-red-600 */
+            font-size: 0.875rem; /* text-sm */
+            display: flex;
+            align-items: flex-start;
+            margin-top: 0.25rem;
+        }
+
+        /* Add a small warning icon via CSS before each error message */
+        .django-input-wrapper ul.errorlist li::before {
+            content: "⚠";
+            margin-right: 0.375rem;
+            font-size: 0.875rem;
+        }
+    </style>
 {% endblock content %}

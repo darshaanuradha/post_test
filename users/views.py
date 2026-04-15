@@ -29,7 +29,10 @@ def login_view(request):
             user = form.get_user()
             # Log the user in
             login(request, user)
-            return redirect("post:list")
+            if "next" in request.POST:
+                return redirect(request.POST["next"])
+            else:
+                return redirect("home")
     else:
         # GET request: empty form
         form = AuthenticationForm()

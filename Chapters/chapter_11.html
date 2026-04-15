@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Tutorial: Creating Posts with Custom Forms</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        p,
+        li {
+            font-size: 16px;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        code {
+            background-color: #f1f2f6;
+            color: #e84118;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+        }
+
+        pre {
+            background-color: #2d3436;
+            color: #dfe6e9;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            line-height: 1.4;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .note {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-left: 5px solid #ffeeba;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .terminal {
+            background-color: #000;
+            color: #0f0;
+            padding: 10px;
+            font-family: monospace;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Django Guide: Forms, Views, and Foreign Keys</h1>
+
+        <h2>1. Creating a Custom Form</h2>
+        <ul>
+            <li>Open your posts app directory and create a new file named <code>forms.py</code>.</li>
+            <li>Import Django's forms module (<code>from django import forms</code>) and import your models
+                (<code>from . import models</code>).</li>
+            <li>Create a new class called <code>CreatePost</code> that inherits from <code>forms.ModelForm</code>.</li>
+            <li>Inside this class, define a nested class named <code>Meta</code>.</li>
+            <li>Within the <code>Meta</code> class, designate the target model and provide a list of fields.</li>
+        </ul>
+        <pre><code>from django import forms
+from . import models
+
+class CreatePost(forms.ModelForm):
+    class Meta:
+        model = models.Post
+        fields = ['title', 'body', 'slug', 'banner']</code></pre>
+        <div class="note">
+            <strong>Note:</strong> The date is excluded from the fields list because it is auto-generated.
+        </div>
+
+        <h2>2. Updating the View for the Form</h2>
+        <ul>
+            <li>Open <code>views.py</code> inside your posts app and import your new forms file:
+                <code>from . import forms</code>.</li>
+            <li>Scroll down to your <code>post_new</code> function. To handle standard GET requests (when a user first
+                opens the page), instantiate an empty form.</li>
+            <li>Pass this empty form to your template via the context dictionary.</li>
+        </ul>
+        <pre><code>def post_new(request):
+    # ... POST logic goes here later ...
+    else:
+        form = forms.CreatePost()
+    
+    return render(request, 'posts/post_new.html', {'form': form})</code></pre>
+
+        <h2>3. Building the Form in the Template</h2>
+        <ul>
+            <li>Open your <code>post_new.html</code> template and add an HTML <code>&lt;form&gt;</code> element.</li>
+            <li>Set the action attribute to dynamically submit to the named URL
+                (<code>action="{% url 'posts:new-post' %}"</code>).</li>
+            <li>Set the method to <code>"POST"</code>. Because this form will handle an image upload (the banner), you
+                must also include the attribute <code>enctype="multipart/form-data"</code>.</li>
+            <li>Inside the form, put your security tag <code>{% csrf_token %}</code>, output your dynamic form fields
+                using <code>{{ form }}</code>, and include a submit button.</li>
+        </ul>
+        <pre><code>&lt;form action="{% url 'posts:new-post' %}" method="POST" enctype="multipart/form-data"&gt;
+    {% csrf_token %}
+    {{ form }}
+    &lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+        <h2>4. Adding an Author Foreign Key to the Model</h2>
+        <ul>
+            <li>To track which user creates a post, open <code>models.py</code> in your posts app and import the
+                built-in user model at the top: <code>from django.contrib.auth.models import User</code>.</li>
+            <li>Add an <code>author</code> field to your <code>Post</code> model by creating a relational link. The
+                CASCADE rule ensures that if a user is deleted, their corresponding posts are deleted along with them.
+            </li>
+        </ul>
+        <pre><code>author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)</code></pre>
+        <div class="note">
+            <strong>Important:</strong> Because you altered the model, you must go into the Django admin panel
+            (<code>/admin</code>) and delete all of your existing posts first. Otherwise, you will get an error since
+            those old posts lack an assigned author.
+        </div>
+        <p>Stop the server and apply your new changes to the database by running:</p>
+        <div class="terminal">
+            py manage.py makemigrations<br>
+            py manage.py migrate
+        </div>
+
+        <h2>5. Saving the Post with the Current User</h2>
+        <ul>
+            <li>Go back to the <code>post_new</code> function in your posts app's <code>views.py</code>.</li>
+            <li>Create an <code>if</code> block to check if the form is being submitted via POST.</li>
+            <li>Instantiate the form and fill it with the submitted text data and image files.</li>
+            <li>Check if the submitted data is valid. If it is, delay saving to assign the logged-in user, then commit
+                it to the database.</li>
+        </ul>
+        <pre><code>def post_new(request):
+    if request.method == 'POST':
+        form = forms.CreatePost(request.POST, request.FILES)
+        if form.is_valid():
+            newpost = form.save(commit=False)
+            newpost.author = request.user
+            newpost.save()
+            return redirect('posts:list')
+    else:
+        form = forms.CreatePost()
+        
+    return render(request, 'posts/post_new.html', {'form': form})</code></pre>
+
+        <h2>6. Displaying the Author on the Post List</h2>
+        <ul>
+            <li>Finally, open your <code>post_list.html</code> template.</li>
+            <li>Find where you output the post date, and directly below it, output the post author dynamically using the
+                template tag.</li>
+        </ul>
+        <pre><code>&lt;!-- Inside your loop --&gt;
+&lt;p class="date"&gt;{{ post.date }}&lt;/p&gt;
+&lt;p class="author"&gt;By: {{ post.author }}&lt;/p&gt;</code></pre>
+
+    </div>
+
+</body>
+
+</html>

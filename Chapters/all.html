@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Complete Django Beginner's Guide</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --accent: #38bdf8;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --code-bg: #0b1120;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bento-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        /* Glassmorphism Bento Card */
+        .chapter-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 1rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #e2e8f0;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        p,
+        li {
+            color: var(--text-muted);
+        }
+
+        ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 1.2rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        .pro-tip {
+            background: rgba(56, 189, 248, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+            color: #bae6fd;
+        }
+
+        .lang-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin-bottom: -0.5rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>The Complete Django Beginner's Guide</h1>
+            <p>Step-by-step tutorial from setup to authentication and databases.</p>
+        </header>
+
+        <div class="bento-grid">
+
+            <section class="chapter-card">
+                <h2>Chapter 1: Django Project Setup Guide</h2>
+
+                <h3>1. Prerequisites & Initial Setup</h3>
+                <ul>
+                    <li>Ensure you have learned the basics of Python and have a code editor installed, such as Visual
+                        Studio Code (VS Code).</li>
+                    <li>Ensure you have Python installed (download from python.org).</li>
+                    <li>Create a new folder for your project (e.g., <code>lesson_one</code>) and open it in VS Code.
+                    </li>
+                    <li>Open a terminal window in VS Code using <code>Ctrl + `</code> (control and the backtick).</li>
+                    <li>Verify your Python installation by checking the version:<br>
+                        <strong>Windows:</strong> <code>py --version</code><br>
+                        <strong>Mac/Linux:</strong> <code>python3 --version</code>
+                    </li>
+                </ul>
+
+                <h3>2. Virtual Environment & Django Installation</h3>
+                <p>Create a virtual environment to keep your dependencies contained:</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>py -m venv .venv</code></pre>
+                <p><em>(Use <code>python3</code> instead of <code>py</code> on Mac/Linux)</em></p>
+                <p>Activate the virtual environment. You will see <code>(.venv)</code> appear in the terminal prompt
+                    when successful.</p>
+                <ul>
+                    <li><strong>Windows:</strong> <code>source .venv/scripts/activate</code></li>
+                    <li><strong>Mac/Linux:</strong> <code>source .venv/bin/activate</code></li>
+                </ul>
+                <p>Install Django (use a capital "D"):</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>py -m pip install Django</code></pre>
+                <p>Verify the installation by opening the Python REPL:</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>py</code></pre>
+                <p>Then type:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>import django
+print(django.__version__)
+quit()</code></pre>
+
+                <h3>3. Creating the Project & Running the Server</h3>
+                <p>Create the project (replace <code>myproject</code> with your desired name):</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>django-admin startproject myproject</code></pre>
+                <p>Navigate into your newly created project folder:</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>cd myproject</code></pre>
+                <p>Start the server to ensure everything is working:</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>py manage.py runserver</code></pre>
+                <p>Open a web browser and go to <code>localhost:8000</code> (or <code>http://127.0.0.1:8000</code>) to
+                    see the default Django success page. Stop the server in the terminal by pressing
+                    <code>Ctrl + C</code>.</p>
+
+                <h3>4. Configuring Views and URLs</h3>
+                <p>Open the <code>urls.py</code> file inside the inner <code>myproject</code> folder. Add new empty
+                    paths for your homepage and an about page.</p>
+                <p>Create a new file called <code>views.py</code> in the same directory. Inside <code>views.py</code>,
+                    create two functions that return simple text messages:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.http import HttpResponse
+
+def homepage(request):
+    return HttpResponse("Welcome to the Home Page")
+
+def about(request):
+    return HttpResponse("About Us")</code></pre>
+                <p>Go back to <code>urls.py</code>, import the views, and link them:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.contrib import admin
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.homepage),
+    path('about/', views.about),
+]</code></pre>
+
+                <h3>5. Creating HTML Templates</h3>
+                <p>At the top level of your <code>myproject</code> folder (alongside <code>manage.py</code>), create a
+                    new directory named <code>templates</code>.</p>
+                <p>Inside this directory, create <code>home.html</code> and <code>about.html</code>. Add basic HTML
+                    content and an anchor tag <code>&lt;a&gt;</code> in each to link to the other.</p>
+                <p>Open <code>settings.py</code> (in the inner <code>myproject</code> folder), scroll to the TEMPLATES
+                    section, and add <code>'templates'</code> inside the DIRS list:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>TEMPLATES = [
+    {
+        ...
+        'DIRS': ['templates'],
+        ...
+    },
+]</code></pre>
+                <p>Open <code>views.py</code> and update it to use the render function:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.shortcuts import render
+
+def homepage(request):
+    return render(request, 'home.html')
+
+def about(request):
+    return render(request, 'about.html')</code></pre>
+
+                <h3>6. Adding Static Files (CSS and JavaScript)</h3>
+                <p>At the top level of your project, create a new folder named <code>static</code>. Inside
+                    <code>static</code>, create a <code>css</code> folder with a <code>style.css</code> file, and a
+                    <code>js</code> folder with a <code>main.js</code> file.</p>
+                <p>Open <code>settings.py</code>, add <code>import os</code> at the top, scroll to the bottom, and add:
+                </p>
+                <span class="lang-badge">Python</span>
+                <pre><code>STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]</code></pre>
+                <p>Update your HTML templates to load static files. Add this below <code>&lt;!DOCTYPE html&gt;</code>:
+                </p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>{% load static %}</code></pre>
+                <p>Link your CSS and JS in your HTML <code>&lt;head&gt;</code>:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>&lt;link rel="stylesheet" href="{% static 'css/style.css' %}"&gt;
+&lt;script defer src="{% static 'js/main.js' %}"&gt;&lt;/script&gt;</code></pre>
+            </section>
+
+            <section class="chapter-card">
+                <h2>Chapter 2: Apps & Template Inheritance</h2>
+
+                <h3>1. Environment Setup & VS Code Extensions</h3>
+                <p>Make sure your virtual environment is active and you are inside <code>myproject</code>.</p>
+                <div class="pro-tip">
+                    <strong>Pro Tip:</strong> Install the Django VS Code extension for syntax highlighting and VS Code
+                    Icons to make your file structure easier to navigate.
+                </div>
+
+                <h3>2. Creating a Modular App</h3>
+                <p>Create a new app named "posts":</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>py manage.py startapp posts</code></pre>
+                <p>Register the app in <code>settings.py</code> by adding <code>'posts'</code> to the INSTALLED_APPS
+                    list.</p>
+
+                <h3>3. Setting up Views and App URLs</h3>
+                <p>In <code>posts/views.py</code>, define your view:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.shortcuts import render
+
+def post_list(request):
+    return render(request, 'posts/post_list.html')</code></pre>
+                <p>Create <code>posts/urls.py</code> and map the route:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.post_list),
+]</code></pre>
+                <p>In the main <code>urls.py</code>, use <code>include()</code> to link them:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('posts/', include('posts.urls')),
+    # ... other paths
+]</code></pre>
+
+                <h3>4. Namespacing and Creating App Templates</h3>
+                <p>Create a <code>templates</code> folder inside your posts app folder, and then a <code>posts</code>
+                    folder inside that (<code>posts/templates/posts/</code>). This namespaces your templates. Create
+                    <code>post_list.html</code> inside that nested folder.</p>
+
+                <h3>5. Creating a Master Layout Template</h3>
+                <p>Create <code>layout.html</code> in your top-level templates directory to hold shared elements like
+                    <code>&lt;head&gt;</code> and <code>&lt;nav&gt;</code>.</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>{% load static %}
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;{% block title %}My Site{% endblock %}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;nav&gt;
+    &lt;/nav&gt;
+    &lt;main&gt;
+        {% block content %}
+        {% endblock %}
+    &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+                <h3>6. Extending the Layout in Other Templates</h3>
+                <p>Remove boilerplate from your other HTML files and inherit the master layout:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>{% extends 'layout.html' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+    &lt;h1&gt;Welcome Home&lt;/h1&gt;
+{% endblock %}</code></pre>
+            </section>
+
+            <section class="chapter-card">
+                <h2>Chapter 3: Django Models & Migrations</h2>
+
+                <h3>1. Creating a Database Model</h3>
+                <div class="pro-tip">
+                    <strong>Note:</strong> Models in Django are Python classes that map to tables in your database.
+                </div>
+                <p>Open <code>models.py</code> inside your posts app and create a model:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.db import models
+
+class Post(models.Model):
+    title = models.CharField(max_length=75)
+    body = models.TextField()
+    slug = models.SlugField()
+    date = models.DateTimeField(auto_now_add=True)</code></pre>
+
+                <h3>2. Applying Migrations</h3>
+                <p>Apply Django's built-in migrations first:</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>py manage.py migrate</code></pre>
+                <p>Make migrations for your new Post app:</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>py manage.py makemigrations</code></pre>
+                <p>Apply your new migration to build the table:</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>py manage.py migrate</code></pre>
+            </section>
+
+            <section class="chapter-card">
+                <h2>Chapter 4: The Django ORM & Shell</h2>
+
+                <h3>1. Starting the Shell</h3>
+                <p>Start the interactive console:</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>py manage.py shell</code></pre>
+
+                <h3>2. Exploring the Django ORM & Saving Data</h3>
+                <p>Import your model and create an entry:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from posts.models import Post
+
+p = Post()
+p.title = 'my first post!'
+p.save()
+
+# Retrieve all posts
+Post.objects.all()</code></pre>
+                <p>Type <code>exit()</code> to leave the shell.</p>
+
+                <h3>3. Customizing Model Representation</h3>
+                <p>To fix the generic <code>&lt;Post object (1)&gt;</code> display, add a string method to your model in
+                    <code>posts/models.py</code>:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>    def __str__(self):
+        return self.title</code></pre>
+                <p><em>(No migration is needed for this display change.)</em></p>
+            </section>
+
+            <section class="chapter-card">
+                <h2>Chapter 5: Django Admin & Dynamic Templates</h2>
+
+                <h3>1. Accessing the Admin Panel & Superuser</h3>
+                <p>Stop the server (<code>Ctrl + C</code>) and create an admin account:</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>py manage.py createsuperuser</code></pre>
+                <p>Follow the prompts. Restart your server and navigate to <code>localhost:8000/admin</code>.</p>
+
+                <h3>2. Registering Models</h3>
+                <p>In <code>posts/admin.py</code>, register your model:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.contrib import admin
+from .models import Post
+
+admin.site.register(Post)</code></pre>
+
+                <h3>3. Fetching and Rendering Data</h3>
+                <p>In <code>posts/views.py</code>, fetch the data and pass it to the template:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from .models import Post
+
+def post_list(request):
+    posts = Post.objects.all().order_by('-date')
+    return render(request, 'posts/post_list.html', {'posts': posts})</code></pre>
+                <p>In <code>post_list.html</code>, loop through the data:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>{% extends 'layout.html' %}
+
+{% block content %}
+    {% for post in posts %}
+        &lt;h2&gt;{{ post.title }}&lt;/h2&gt;
+        &lt;p&gt;{{ post.date }}&lt;/p&gt;
+        &lt;p&gt;{{ post.body }}&lt;/p&gt;
+    {% endfor %}
+{% endblock %}</code></pre>
+            </section>
+
+            <section class="chapter-card">
+                <h2>Chapter 6: Dynamic URLs & Single Post Pages</h2>
+
+                <h3>1. App Namespaces and URLs</h3>
+                <p>In <code>posts/urls.py</code>, set up named URLs and a path converter for slugs:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.urls import path
+from . import views
+
+app_name = 'posts' # App namespace
+
+urlpatterns = [
+    path('', views.post_list, name='list'),
+    path('&lt;slug:slug&gt;/', views.post_page, name='page'), 
+]</code></pre>
+
+                <h3>2. Defining the Single Post View</h3>
+                <p>In <code>posts/views.py</code>:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>def post_page(request, slug):
+    post = Post.objects.get(slug=slug)
+    return render(request, 'posts/post_page.html', {'post': post})</code></pre>
+
+                <h3>3. Creating the Template & Linking</h3>
+                <p>Create <code>posts/templates/posts/post_page.html</code>:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>{% extends 'layout.html' %}
+{% block content %}
+    &lt;article&gt;
+        &lt;h1&gt;{{ post.title }}&lt;/h1&gt;
+        &lt;small&gt;{{ post.date }}&lt;/small&gt;
+        &lt;p&gt;{{ post.body }}&lt;/p&gt;
+    &lt;/article&gt;
+{% endblock %}</code></pre>
+                <p>Update <code>post_list.html</code> to link to the new page:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>&lt;h2&gt;
+    &lt;a href="{% url 'posts:page' slug=post.slug %}"&gt;
+        {{ post.title }}
+    &lt;/a&gt;
+&lt;/h2&gt;</code></pre>
+            </section>
+
+            <section class="chapter-card">
+                <h2>Chapter 7: Adding and Handling Images</h2>
+
+                <h3>1. Configuring Media Settings</h3>
+                <p>In <code>settings.py</code> (add to the bottom):</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>import os
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')</code></pre>
+                <p>In your main <code>urls.py</code>:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.conf.urls.static import static
+from django.conf import settings
+
+urlpatterns = [
+    # ... existing paths
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)</code></pre>
+
+                <h3>2. Pillow & Model Updates</h3>
+                <p>Install Pillow for image handling:</p>
+                <span class="lang-badge">Bash</span>
+                <pre><code>pip install pillow</code></pre>
+                <p>Update the Post model in <code>posts/models.py</code>:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>    banner = models.ImageField(default='fallback.png', blank=True)</code></pre>
+                <p>Run <code>makemigrations</code> and <code>migrate</code>. Drag a <code>fallback.png</code> image into
+                    your newly created media folder.</p>
+
+                <h3>3. Displaying Images</h3>
+                <p>In <code>post_page.html</code>:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>&lt;img src="{{ post.banner.url }}" alt="{{ post.title }}" class="banner-image"&gt;</code></pre>
+            </section>
+
+            <section class="chapter-card">
+                <h2>Chapter 8: User Registration</h2>
+
+                <h3>1. Creating the Users App</h3>
+                <span class="lang-badge">Bash</span>
+                <pre><code>py manage.py startapp users</code></pre>
+                <p>Add <code>'users'</code> to INSTALLED_APPS in <code>settings.py</code>.</p>
+
+                <h3>2. Configuring User URLs</h3>
+                <p>Create <code>users/urls.py</code>:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.urls import path
+from . import views
+
+app_name = 'users'
+
+urlpatterns = [
+    path('register/', views.register_view, name='register'),
+]</code></pre>
+                <p>Include this in your main <code>urls.py</code>:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>path('users/', include('users.urls')),</code></pre>
+
+                <h3>3. The Registration View & Template</h3>
+                <p>In <code>users/views.py</code>:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+
+def register_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST) 
+        if form.is_valid():
+            form.save()
+            return redirect('posts:list')
+    else:
+        form = UserCreationForm() 
+        
+    return render(request, 'users/register.html', { 'form': form })</code></pre>
+                <p>Create <code>users/templates/users/register.html</code>:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>{% extends 'layout.html' %}
+{% block content %}
+    &lt;h1&gt;Register&lt;/h1&gt;
+    &lt;form action="{% url 'users:register' %}" method="POST"&gt;
+        {% csrf_token %}
+        {{ form }}
+        &lt;button type="submit"&gt;Register&lt;/button&gt;
+    &lt;/form&gt;
+{% endblock %}</code></pre>
+            </section>
+
+            <section class="chapter-card">
+                <h2>Chapter 9: User Login & Auto-Login</h2>
+
+                <h3>1. The Login View & URL</h3>
+                <p>In <code>users/urls.py</code>, add <code>path('login/', views.login_view, name='login'),</code>.</p>
+                <p>In <code>users/views.py</code>:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('posts:list')
+    else:
+        form = AuthenticationForm()
+        
+    return render(request, 'users/login.html', { 'form': form })</code></pre>
+
+                <h3>2. The Login Template</h3>
+                <p>Create <code>login.html</code> (similar to <code>register.html</code>):</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>&lt;form action="{% url 'users:login' %}" method="POST"&gt;
+    {% csrf_token %}
+    {{ form }}
+    &lt;button type="submit"&gt;Login&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+                <h3>3. Auto-Login on Registration</h3>
+                <p>Update <code>register_view</code> in <code>users/views.py</code> so the user is logged in
+                    automatically:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>        if form.is_valid():
+            login(request, form.save()) 
+            return redirect('posts:list')</code></pre>
+            </section>
+
+            <section class="chapter-card">
+                <h2>Chapter 10: Authentication Extras</h2>
+
+                <h3>1. Logout View & Form</h3>
+                <p>In <code>users/urls.py</code>, add <code>path('logout/', views.logout_view, name='logout'),</code>.
+                </p>
+                <p>In <code>users/views.py</code>:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.contrib.auth import logout
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('posts:list')</code></pre>
+                <p>In your navigation (<code>layout.html</code>), use a form for logout to ensure security:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>&lt;form action="{% url 'users:logout' %}" method="POST" style="display:inline;"&gt;
+    {% csrf_token %}
+    &lt;button type="submit"&gt;Log out&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+                <h3>2. Login Required & Next Parameters</h3>
+                <p>In <code>posts/views.py</code>, protect the new post route (ensure this URL path is placed above your
+                    slug path in <code>urls.py</code>):</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.contrib.auth.decorators import login_required
+
+@login_required(login_url="/users/login/")
+def post_new(request):
+    return render(request, 'posts/post_new.html')</code></pre>
+                <p>Pass the next parameter in <code>login.html</code>:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>{% if request.GET.next %}
+    &lt;input type="hidden" name="next" value="{{ request.GET.next }}"&gt;
+{% endif %}</code></pre>
+                <p>And handle it in the <code>login_view</code>:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>if 'next' in request.POST:
+    return redirect(request.POST.get('next'))
+else:
+    return redirect('posts:list')</code></pre>
+
+                <h3>3. Conditional Navigation</h3>
+                <p>Update <code>layout.html</code> so users only see links relevant to them:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>&lt;nav&gt;
+    &lt;a href="{% url 'posts:list' %}"&gt;Home&lt;/a&gt;
+    
+    {% if user.is_authenticated %}
+        &lt;a href="{% url 'posts:new-post' %}"&gt;New Post&lt;/a&gt;
+        &lt;form action="{% url 'users:logout' %}" method="POST" style="display:inline;"&gt;
+            {% csrf_token %}
+            &lt;button type="submit"&gt;Log out&lt;/button&gt;
+        &lt;/form&gt;
+    {% else %}
+        &lt;a href="{% url 'users:register' %}"&gt;Register&lt;/a&gt;
+        &lt;a href="{% url 'users:login' %}"&gt;Login&lt;/a&gt;
+    {% endif %}
+&lt;/nav&gt;</code></pre>
+            </section>
+
+            <section class="chapter-card">
+                <h2>Chapter 11: Forms, Views, and Foreign Keys</h2>
+
+                <h3>1. Creating a Custom Form</h3>
+                <p>Create <code>forms.py</code> in your posts app:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django import forms
+from . import models
+
+class CreatePost(forms.ModelForm):
+    class Meta:
+        model = models.Post
+        fields = ['title', 'body', 'slug', 'banner']</code></pre>
+
+                <h3>2. The Form Template</h3>
+                <p>In <code>post_new.html</code>, be sure to include enctype for image uploads:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>&lt;form action="{% url 'posts:new-post' %}" method="POST" enctype="multipart/form-data"&gt;
+    {% csrf_token %}
+    {{ form }}
+    &lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+                <h3>3. Adding an Author Foreign Key</h3>
+                <p>In <code>posts/models.py</code>, add a relationship to Django's built-in User model:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from django.contrib.auth.models import User
+
+class Post(models.Model):
+    # ... existing fields
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)</code></pre>
+                <div class="pro-tip">
+                    <strong>Important:</strong> Delete any existing posts in the admin panel first, then run
+                    <code>makemigrations</code> and <code>migrate</code>.
+                </div>
+
+                <h3>4. Saving the Post with the Current User</h3>
+                <p>Update <code>post_new</code> in <code>posts/views.py</code>:</p>
+                <span class="lang-badge">Python</span>
+                <pre><code>from . import forms
+
+@login_required(login_url="/users/login/")
+def post_new(request):
+    if request.method == 'POST':
+        form = forms.CreatePost(request.POST, request.FILES)
+        if form.is_valid():
+            newpost = form.save(commit=False)
+            newpost.author = request.user
+            newpost.save()
+            return redirect('posts:list')
+    else:
+        form = forms.CreatePost()
+        
+    return render(request, 'posts/post_new.html', {'form': form})</code></pre>
+
+                <h3>5. Displaying the Author</h3>
+                <p>In <code>post_list.html</code>:</p>
+                <span class="lang-badge">HTML</span>
+                <pre><code>&lt;p class="author"&gt;By: {{ post.author }}&lt;/p&gt;</code></pre>
+            </section>
+
+        </div>
+    </div>
+</body>
+
+</html>

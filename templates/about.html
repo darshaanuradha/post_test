@@ -1,27 +1,67 @@
 {% extends "layout.html" %}
 {% block title %}
-  About Us
+  About Me - Anuradha
 {% endblock title %}
 {% block content %}
-  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-    <div class="max-w-4xl mx-auto px-4 py-16">
+  <div class="bg-gray-50 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
-      <div class="text-center mb-16">
-        <h2 class="text-5xl font-bold text-gray-900 mb-4">About Us</h2>
-        <p class="text-xl text-gray-600">
-          Welcome to our website. We are dedicated to providing quality services
-          and products to our customers.
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-indigo-600 bg-indigo-50 px-4 py-1.5 rounded-full text-sm font-semibold uppercase">About Me</span>
+        <h1 class="mt-6 text-4xl sm:text-5xl font-extrabold text-gray-900">
+          Passionate <span class="text-indigo-600">Software Developer</span>
+        </h1>
+        <p class="mt-6 text-lg text-gray-600">
+          I'm Anuradha, a Software Engineering student and web developer from Sri Lanka.
+          I love building modern web applications and continuously improving my skills.
         </p>
       </div>
-      <!-- Mission Section -->
-      <div class="bg-white rounded-lg shadow-lg p-8 mb-8 border-l-4 border-blue-500">
-        <h3 class="text-3xl font-bold text-gray-900 mb-4">Our Mission</h3>
-        <p class="text-lg text-gray-700">Our mission is to deliver excellence in everything we do.</p>
+      <!-- Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <!-- My Journey -->
+        <div class="bg-white rounded-2xl p-8 shadow hover:shadow-lg transition">
+          <div class="text-3xl mb-4">🚀</div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">My Journey</h3>
+          <p class="text-gray-600">
+            My journey into IT started with hardware engineering studies (NVQ Level 4 & 5),
+            and now I’m pursuing a degree in Software and Artificial Intelligence.
+            Step by step, I’ve grown into a full-stack web developer.
+          </p>
+        </div>
+        <!-- My Skills -->
+        <div class="bg-white rounded-2xl p-8 shadow hover:shadow-lg transition">
+          <div class="text-3xl mb-4">💻</div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">My Skills</h3>
+          <p class="text-gray-600">
+            I work with modern technologies like Django, Laravel, Tailwind CSS,
+            and MySQL. I enjoy building clean, responsive, and user-friendly systems.
+          </p>
+        </div>
       </div>
-      <!-- Team Section -->
-      <div class="bg-white rounded-lg shadow-lg p-8 border-l-4 border-green-500">
-        <h3 class="text-3xl font-bold text-gray-900 mb-4">Our Team</h3>
-        <p class="text-lg text-gray-700">We have a talented team of professionals committed to your success.</p>
+      <!-- Extra Section -->
+      <div class="mt-16 max-w-4xl mx-auto text-center">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">What I Believe</h2>
+        <p class="text-gray-600 leading-relaxed">
+          I believe consistency and practice are the keys to success in software development.
+          Every day is a new opportunity to learn, build, and improve.
+        </p>
+      </div>
+      <!-- Stats -->
+      <div class="mt-16 max-w-5xl mx-auto border-t pt-10">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+          <div>
+            <p class="text-4xl font-extrabold text-indigo-600">10+</p>
+            <p class="text-gray-500">Projects Completed</p>
+          </div>
+          <div>
+            <p class="text-4xl font-extrabold text-indigo-600">2+</p>
+            <p class="text-gray-500">Years Learning</p>
+          </div>
+          <div>
+            <p class="text-4xl font-extrabold text-indigo-600">100%</p>
+            <p class="text-gray-500">Dedication</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
