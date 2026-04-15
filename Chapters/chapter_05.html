@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 5: Django Admin & Dynamic Templates</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --django-green: #0C4B33;
+            --django-light: #44B78B;
+            --bg-color: #F4F5F7;
+            --card-bg: #FFFFFF;
+            --text-main: #2D3748;
+            --text-muted: #718096;
+            --code-bg: #1A202C;
+            --code-text: #E2E8F0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: var(--django-green);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .step-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--django-light);
+            transition: transform 0.2s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .step-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.4rem;
+            color: var(--django-green);
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #E2E8F0;
+            padding-bottom: 10px;
+        }
+
+        .step-number {
+            background-color: var(--django-light);
+            color: white;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        p {
+            margin: 0 0 15px 0;
+        }
+
+        ul {
+            margin: 0 0 15px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background-color: #EDF2F7;
+            color: #DD6B20;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95em;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .info-box {
+            background-color: #E6FFFA;
+            border: 1px solid #319795;
+            color: #234E52;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .info-box strong {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Chapter 5: Django Admin & Dynamic Templates</h1>
+            <p>A guide to utilizing the Django Admin panel and displaying database records on your web pages.</p>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><span class="step-number">1</span> Accessing the Admin Panel</h2>
+            <p>Activate your virtual environment and start your server using:</p>
+            <pre><code>py manage.py runserver</code></pre>
+            <p>Open your browser and navigate to <code>localhost:8000/admin</code> to see the default Django
+                Administration login page.</p>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><span class="step-number">2</span> Creating a Superuser</h2>
+            <p>To log in to the admin panel, you need an administrative account. Stop your server in the terminal by
+                pressing <strong>Ctrl + C</strong>.</p>
+            <p>Run the following command:</p>
+            <pre><code>py manage.py createsuperuser</code></pre>
+            <p>Follow the prompts to enter a username, an optional email address (you can leave this blank), and a
+                password.</p>
+            <div class="info-box">
+                <strong>📝 Note:</strong> The password must be at least 8 characters long and cannot be a common word.
+            </div>
+            <p>Restart your server (<code>py manage.py runserver</code>) and log in to the admin panel with your newly
+                created credentials.</p>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><span class="step-number">3</span> Registering Models in the Admin Panel</h2>
+            <p>By default, your custom models won't appear in the admin panel. Open the <code>admin.py</code> file
+                located inside your <code>posts</code> app folder.</p>
+            <p>Import your <code>Post</code> model at the top of the file:</p>
+            <pre><code>from .models import Post</code></pre>
+            <p>Register the model so the admin panel knows about it:</p>
+            <pre><code>admin.site.register(Post)</code></pre>
+            <p>Save the file and refresh your browser. You will now see your Posts table and can use the admin panel as
+                a Content Management System (CMS) to easily add, edit, and manage your posts.</p>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><span class="step-number">4</span> Fetching Data in Views</h2>
+            <p>To display these posts on your actual website, open <code>views.py</code> inside the <code>posts</code>
+                app.</p>
+            <p>Import your model at the top:</p>
+            <pre><code>from .models import Post</code></pre>
+            <p>Inside your <code>post_list</code> function, retrieve the posts from the database and assign them to a
+                variable:</p>
+            <pre><code>posts = Post.objects.all().order_by('-date')</code></pre>
+            <div class="info-box">
+                <strong>💡 Tip:</strong> The minus sign before <code>'date'</code> sorts the posts in descending order,
+                putting the newest posts at the top.
+            </div>
+            <p>Pass this data to your template by providing a dictionary as the third argument in your render function:
+            </p>
+            <pre><code>return render(request, 'posts/post_list.html', {'posts': posts})</code></pre>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><span class="step-number">5</span> Rendering Dynamic Data in Templates</h2>
+            <p>Open your <code>post_list.html</code> template located in your nested <code>templates/posts</code>
+                folder.</p>
+            <p>Use Django's template engine to loop through the data dictionary you just passed from the view. Start the
+                loop with:</p>
+            <pre><code>{% for post in posts %}</code></pre>
+            <p>Inside the loop, you can output specific fields from each post using double curly braces, such as:</p>
+            <ul>
+                <li><code>{{ post.title }}</code></li>
+                <li><code>{{ post.date }}</code></li>
+                <li><code>{{ post.body }}</code></li>
+            </ul>
+            <p>Close the loop with:</p>
+            <pre><code>{% endfor %}</code></pre>
+            <p>Visit your live site at <code>localhost:8000/posts/</code> to see your database information dynamically
+                displayed on the page.</p>
+        </div>
+
+    </div>
+</body>
+
+</html>

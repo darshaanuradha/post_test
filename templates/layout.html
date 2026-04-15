@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+          content="Welcome to My Django App. A modern web application built with Django." />
+    <meta name="keywords" content="Django, Web App, Python, Development" />
+    <title>
+      {% block title %}
+        My Django App
+      {% endblock title %}
+    </title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="{% static 'js/main.js' %}"></script>
+  </head>
+  <body class="bg-slate-50 flex flex-col min-h-screen text-slate-900">
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-lg">D</span>
+          </div>
+          <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Django App
+          </h1>
+        </div>
+        <div class="hidden md:flex items-center gap-1">
+          <!-- Nav links will be here -->
+        </div>
+      </div>
+    </header>
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-slate-200 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap items-center justify-between py-4 gap-4">
+          <div class="flex flex-wrap gap-2">
+            <a href="{% url 'home' %}"
+               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.url_name == 'home' %}bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+              🏠 Home
+            </a>
+            <a href="{% url 'about' %}"
+               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.url_name == 'about' %}bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+              ℹ️ About
+            </a>
+            <a href="{% url 'contact' %}"
+               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.url_name == 'contact' %}bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+              📧 Contact
+            </a>
+            <a href="{% url 'post:list' %}"
+               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.view_name == 'post:list' %} bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+              📝 Posts
+            </a>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a href="{% url 'users:register' %}"
+               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.view_name == 'users:register' %}bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+              Register
+            </a>
+            <a href="{% url 'users:login' %}"
+               class="px-4 py-2 rounded-lg font-medium transition-all duration-200 {% if request.resolver_match.view_name == 'users:login' %}bg-blue-100 text-blue-700{% else %}text-slate-600 hover:bg-slate-100{% endif %}">
+              Login
+            </a>
+            <form action="{% url 'users:logout' %}" method="post" class="inline">
+              {% csrf_token %}
+              <button type="submit"
+                      class="px-4 py-2 rounded-lg font-medium text-slate-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200">
+                Logout
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+      {% block content %}
+      {% endblock content %}
+    </main>
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-100 mt-12 border-t border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          <div>
+            <h3 class="font-bold text-white mb-4">About</h3>
+            <p class="text-slate-400 text-sm">A modern web application built with Django and Tailwind CSS.</p>
+          </div>
+          <div>
+            <h3 class="font-bold text-white mb-4">Quick Links</h3>
+            <ul class="text-slate-400 text-sm space-y-2">
+              <li>
+                <a href="{% url 'home' %}" class="hover:text-white transition">Home</a>
+              </li>
+              <li>
+                <a href="{% url 'post:list' %}" class="hover:text-white transition">Posts</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-bold text-white mb-4">Contact</h3>
+            <p class="text-slate-400 text-sm">Get in touch with us</p>
+          </div>
+        </div>
+        <div class="border-t border-slate-800 pt-8 text-center text-slate-400 text-sm">
+          <p>© 2024 My Django App. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+    <style>
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      body {
+        animation: slideDown 0.3s ease-out;
+      }
+    </style>
+  </body>
+</html>

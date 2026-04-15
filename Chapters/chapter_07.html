@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 7: Adding and Handling Images</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 35px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: #e06c75;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        .step-number {
+            background-color: #3498db;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .note-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #856404;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Chapter 7: Adding and Handling Images</h1>
+        <p>This chapter covers how to configure Django to handle user-uploaded media files, update your database models,
+            and display dynamic images inside your templates.</p>
+
+        <section>
+            <h2><span class="step-number">1</span> Configuring Media Settings</h2>
+            <p>Open the <code>settings.py</code> file inside your top-level project folder. Scroll to the bottom of the
+                file (near static files) and add two new variables to tell Django where to store uploaded images.</p>
+            <pre><code>import os # Make sure os is imported at the top of the file
+
+# Add these at the bottom of settings.py
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">2</span> Updating Main Project URLs</h2>
+            <p>Open the master <code>urls.py</code> file in your main project folder. Add the necessary imports and
+                append the media paths to your urlpatterns.</p>
+            <pre><code>from django.contrib import admin
+from django.urls import path, include
+# Add these two new imports:
+from django.conf.urls.static import static
+from django.conf import settings
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('posts/', include('posts.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # Append here</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">3</span> Installing the Pillow Library</h2>
+            <p>Django requires an external library called <strong>Pillow</strong> to handle image fields. Ensure your
+                virtual environment is activated and open the VS Code terminal.</p>
+            <pre><code>pip install pillow</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">4</span> Updating the Post Model</h2>
+            <p>Open <code>models.py</code> inside your posts app. Add a new field to your <code>Post</code> class for a
+                banner image.</p>
+            <pre><code>from django.db import models
+
+class Post(models.Model):
+    title = models.CharField(max_length=75)
+    body = models.TextField()
+    slug = models.SlugField()
+    date = models.DateTimeField(auto_now_add=True)
+    # Add the new ImageField:
+    banner = models.ImageField(default='fallback.png', blank=True)
+
+    def __str__(self):
+        return self.title</code></pre>
+            <p><em>The <code>blank=True</code> argument makes uploading an image optional, while
+                    <code>default='fallback.png'</code> ensures there is a default image displayed if the user doesn't
+                    provide one.</em></p>
+        </section>
+
+        <section>
+            <h2><span class="step-number">5</span> Applying New Migrations</h2>
+            <p>Because you altered your model, you must update the database schema to reflect the new image column. Run
+                these commands in your terminal:</p>
+            <pre><code>py manage.py makemigrations
+py manage.py migrate</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">6</span> Uploading Images via the Admin Panel</h2>
+            <p>Start your server with <code>py manage.py runserver</code> and navigate to your Django admin panel
+                (<code>localhost:8000/admin</code>).</p>
+            <p>Edit your existing posts. You will now see a new "Banner" field where you can choose a file from your
+                computer and save it to the post.</p>
+
+            <div class="note-box">
+                <strong>Note:</strong> Django will automatically generate a new <code>media</code> folder in your VS
+                Code file tree once the first image is uploaded. Drag and drop a placeholder image named
+                <code>fallback.png</code> into that new media folder so your default fallback works properly.
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="step-number">7</span> Displaying Images in Templates</h2>
+            <p>Open your <code>post_page.html</code> template located in your posts app. Add an <code>&lt;img&gt;</code>
+                element and set the source attribute dynamically using Django's template engine.</p>
+            <pre><code>{% extends 'layout.html' %}
+
+{% block content %}
+    &lt;article&gt;
+        &lt;!-- Output the banner image --&gt;
+        &lt;img src="{{ post.banner.url }}" alt="{{ post.title }}" class="banner-image"&gt;
+        
+        &lt;h1&gt;{{ post.title }}&lt;/h1&gt;
+        &lt;small&gt;{{ post.date }}&lt;/small&gt;
+        &lt;p&gt;{{ post.body }}&lt;/p&gt;
+    &lt;/article&gt;
+{% endblock %}</code></pre>
+        </section>
+    </div>
+
+</body>
+
+</html>

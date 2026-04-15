@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 6: Setting Up Individual Post Pages</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 35px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: #e06c75;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        .step-number {
+            background-color: #3498db;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Chapter 6: Dynamic URLs & Single Post Pages</h1>
+        <p>This chapter covers how to route users from a main list of posts to dedicated, dynamically generated pages
+            for individual posts using Django slugs.</p>
+
+        <section>
+            <h2><span class="step-number">1</span> Updating Post Data in the Admin Panel</h2>
+            <p>Start your server and go to the Django admin panel (<code>localhost:8000/admin</code>).</p>
+            <p>Navigate to your existing posts and ensure every post has a completed <code>body</code> and
+                <code>slug</code> field (e.g., <em>my-first-post</em>). The slug will be used to generate a unique URL
+                for each post page.</p>
+        </section>
+
+        <section>
+            <h2><span class="step-number">2</span> Setting up App Names and Named URLs</h2>
+            <p>Open <code>urls.py</code> inside the <strong>posts</strong> app and add <code>app_name = 'posts'</code>
+                at the top to declare a namespace.</p>
+            <pre><code>from django.urls import path
+from . import views
+
+app_name = 'posts' # App namespace
+
+urlpatterns = [
+    # Added name parameter to the list path
+    path('', views.post_list, name='list'), 
+]</code></pre>
+            <p>Open your master <code>layout.html</code> template and update the navigation links to use Django's
+                template tags instead of hardcoded paths.</p>
+            <pre><code>&lt;!-- Inside layout.html --&gt;
+&lt;a href="{% url 'posts:list' %}"&gt;Posts&lt;/a&gt;</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">3</span> Creating a URL Path Converter for Slugs</h2>
+            <p>Back in your posts app <code>urls.py</code>, add a new path for individual post pages using a slug path
+                converter. This tells Django to expect a dynamic slug string in the URL and pass it to the view.</p>
+            <pre><code>urlpatterns = [
+    path('', views.post_list, name='list'),
+    # New path converter for the slug
+    path('&lt;slug:slug&gt;', views.post_page, name='page'), 
+]</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">4</span> Defining the Single Post View</h2>
+            <p>Open <code>views.py</code> inside the posts app and create a new function called <code>post_page</code>
+                that takes <code>request</code> and <code>slug</code> as parameters. Fetch the specific post and render
+                the template.</p>
+            <pre><code>from django.shortcuts import render
+from .models import Post
+
+def post_page(request, slug):
+    # Fetch the single specific post by matching the slug
+    post = Post.objects.get(slug=slug)
+    
+    # Return rendered template, passing the post data in a dictionary
+    return render(request, 'posts/post_page.html', {'post': post})</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">5</span> Creating the Post Page Template</h2>
+            <p>Inside your nested <code>templates/posts</code> directory, create a new file named
+                <code>post_page.html</code>. Extend your master layout and output the specific post's data.</p>
+            <pre><code>{% extends 'layout.html' %}
+
+{% block content %}
+    &lt;article&gt;
+        &lt;h1&gt;{{ post.title }}&lt;/h1&gt;
+        &lt;small&gt;{{ post.date }}&lt;/small&gt;
+        &lt;p&gt;{{ post.body }}&lt;/p&gt;
+    &lt;/article&gt;
+{% endblock %}</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">6</span> Linking the Post List to Individual Pages</h2>
+            <p>Open your existing <code>post_list.html</code> template. Find where you output the post titles and wrap
+                the title in an anchor tag, passing the specific post's slug dynamically to the URL tag.</p>
+            <pre><code>&lt;!-- Inside post_list.html --&gt;
+&lt;h2&gt;
+    &lt;a href="{% url 'posts:page' slug=post.slug %}"&gt;
+        {{ post.title }}
+    &lt;/a&gt;
+&lt;/h2&gt;</code></pre>
+            <p><em>Note: Visit your live site; you should now be able to click on any post title in the list and be
+                    routed to a dedicated URL page specifically for that post!</em></p>
+        </section>
+    </div>
+
+</body>
+
+</html>

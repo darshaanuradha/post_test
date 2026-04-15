@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Guide Part 2: Apps & Templates</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f7f6;
+            color: #2c3e50;
+            margin: 0;
+            padding: 20px;
+        }
+        .note-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px 45px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #1a2a3a;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+            margin-top: 0;
+            text-align: center;
+        }
+        h2 {
+            color: #2980b9;
+            font-size: 1.3rem;
+            margin-top: 35px;
+            display: flex;
+            align-items: center;
+        }
+        h2::before {
+            content: "◆";
+            margin-right: 10px;
+            font-size: 0.8em;
+            color: #3498db;
+        }
+        ul {
+            padding-left: 20px;
+            list-style-type: square;
+        }
+        li {
+            margin-bottom: 15px;
+        }
+        code {
+            background: #f8f9fa;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            color: #d63384;
+            border: 1px solid #e9ecef;
+        }
+        .file-path {
+            color: #6c757d;
+            font-style: italic;
+            font-size: 0.9em;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="note-container">
+        <h1>Django Guide: Apps & Template Inheritance</h1>
+
+        <section>
+            <h2>1. Environment Setup & VS Code Extensions</h2>
+            <ul>
+                <li>Activate your virtual environment: <code>source .venv/scripts/activate</code> (Windows) or <code>source .venv/bin/activate</code> (Mac/Linux).</li>
+                <li>Navigate into your project folder: <code>cd myproject</code>.</li>
+                <li><strong>Pro Tip:</strong> Install the <strong>Django</strong> VS Code extension for syntax highlighting and <strong>VS Code Icons</strong> to make your file structure easier to navigate.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>2. Creating a Modular App</h2>
+            <ul>
+                <li>Create a new app named "posts": <code>py manage.py startapp posts</code>.</li>
+                <li>Register the app: Open <span class="file-path">settings.py</span> and add <code>'posts'</code> to the <code>INSTALLED_APPS</code> list.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. Setting up Views and App URLs</h2>
+            <ul>
+                <li>Create the view: In <span class="file-path">posts/views.py</span>, define <code>post_list</code> to return <code>render(request, 'posts/post_list.html')</code>.</li>
+                <li>Create app-level URLs: Create <span class="file-path">posts/urls.py</span> and map the empty string <code>''</code> to your view.</li>
+                <li>Connect to master URLs: In the main <span class="file-path">urls.py</span>, use <code>include()</code> to link <code>'posts/'</code> to <code>posts.urls</code>.</li>
+            </ul>
+        </section>
+
+        
+
+        <section>
+            <h2>4. Namespacing and Creating App Templates</h2>
+            <ul>
+                <li><strong>Namespace Folders:</strong> Create <code>templates/posts/</code> inside your app folder. This ensures Django doesn't confuse <code>post_list.html</code> with files of the same name in other apps.</li>
+                <li>Create <span class="file-path">post_list.html</span> inside that nested folder.</li>
+                <li><strong>Emmet Fix:</strong> If HTML shortcuts fail, add a mapping for <code>django-html</code> to <code>html</code> in VS Code "Include Languages" settings.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>5. Creating a Master Layout Template</h2>
+            <ul>
+                <li>Create a <span class="file-path">layout.html</span> in your top-level templates directory to hold shared elements like <code>&lt;head&gt;</code> and <code>&lt;nav&gt;</code>.</li>
+                <li>Load static files: <code>{% load static %}</code> at the very top.</li>
+                <li>Define blocks: Use <code>{% block title %}</code> and <code>{% block content %}</code> to mark where child pages will inject their specific data.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>6. Extending the Layout in Other Templates</h2>
+            <ul>
+                <li>Clean up pages: Remove all boilerplate from <code>home.html</code>, <code>about.html</code>, etc.</li>
+                <li>Inherit the master: Add <code>{% extends 'layout.html' %}</code> to the top of each file.</li>
+                <li>Fill the blocks: Wrap your unique content inside the corresponding <code>{% block %}</code> tags.</li>
+            </ul>
+        </section>
+    </div>
+
+</body>
+</html>

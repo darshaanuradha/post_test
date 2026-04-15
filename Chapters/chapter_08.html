@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 8: User Registration</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 35px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: #e06c75;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        .step-number {
+            background-color: #3498db;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .warning-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #721c24;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Chapter 8: User Registration</h1>
+        <p>This chapter covers how to create a dedicated user management app, utilize Django's built-in authentication
+            forms, and securely handle POST requests to register new users.</p>
+
+        <section>
+            <h2><span class="step-number">1</span> Creating the Users App</h2>
+            <p>Open your terminal, ensure your virtual environment is activated, and navigate to your
+                <code>myproject</code> directory. Run the following command to create a new module for user management:
+            </p>
+            <pre><code>py manage.py startapp users</code></pre>
+            <p>Open your main project's <code>settings.py</code> file, scroll down to the <code>INSTALLED_APPS</code>
+                list, and register the new app.</p>
+            <pre><code>INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'posts',
+    'users', # Add your new app here
+]</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">2</span> Configuring User URLs</h2>
+            <p>Create a new <code>urls.py</code> file inside your new <strong>users</strong> app directory to set up
+                your basic URL configurations.</p>
+            <pre><code># Inside users/urls.py
+from django.urls import path
+from . import views
+
+app_name = 'users'
+
+urlpatterns = [
+    path('register/', views.register_view, name='register'),
+]</code></pre>
+            <p>Next, open your <strong>master project's</strong> <code>urls.py</code> file and include your new app's
+                URLs.</p>
+            <pre><code># Inside main project urls.py
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('posts/', include('posts.urls')),
+    path('users/', include('users.urls')), # Append the users paths
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">3 & 4</span> Setting Up the View & Handling Form Logic</h2>
+            <p>Open <code>views.py</code> inside the users app. Import Django's built-in <code>UserCreationForm</code>
+                and the <code>redirect</code> function. Then, build out the logic to handle both GET (viewing the form)
+                and POST (submitting the form) requests.</p>
+            <pre><code>from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+
+def register_view(request):
+    # Check if the form has been submitted
+    if request.method == 'POST':
+        # Instantiate form with submitted data
+        form = UserCreationForm(request.POST) 
+        if form.is_valid():
+            form.save() # Save the new user to the database
+            return redirect('posts:list') # Redirect to home page
+    else:
+        # GET request: Instantiate an empty form
+        form = UserCreationForm() 
+        
+    # Return rendered template, passing the form context
+    return render(request, 'users/register.html', { 'form': form })</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">5 & 6</span> Creating the Registration Template</h2>
+            <p>Inside your users app, create a <code>templates/users/</code> directory, and create a new file named
+                <code>register.html</code>. Extend your master layout and build the HTML form.</p>
+
+            <div class="warning-box">
+                <strong>Crucial Security Step:</strong> You must include the <code>{% csrf_token %}</code> tag inside
+                your form to prevent Cross-Site Request Forgeries. Without it, Django will reject the submission and
+                throw an error.
+            </div>
+
+            <pre><code>{% extends 'layout.html' %}
+
+{% block content %}
+    &lt;h1&gt;Register for an Account&lt;/h1&gt;
+    
+    &lt;!-- Action points back to the register URL --&gt;
+    &lt;form action="/users/register/" method="POST"&gt;
+        {% csrf_token %}
+        
+        &lt;!-- Output dynamic form fields --&gt;
+        {{ form }}
+        
+        &lt;button type="submit"&gt;Register&lt;/button&gt;
+    &lt;/form&gt;
+{% endblock %}</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">7</span> Updating the Navigation Bar</h2>
+            <p>Finally, open your master <code>layout.html</code> file. Add a new navigation link to the menu so users
+                can easily find the registration page using Django's URL template tag.</p>
+            <pre><code>&lt;!-- Inside layout.html navigation menu --&gt;
+&lt;a href="{% url 'posts:list' %}"&gt;Home&lt;/a&gt;
+&lt;a href="{% url 'users:register' %}"&gt;Register&lt;/a&gt;</code></pre>
+        </section>
+    </div>
+
+</body>
+
+</html>

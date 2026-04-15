@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+{% block title %}
+    Register
+{% endblock title %}
+{% block content %}
+    <style>
+    :root {
+        --bg1: #0f172a;
+        --bg2: #1e293b;
+        --card: rgba(255, 255, 255, 0.08);
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --accent: #6366f1;
+        --accent-hover: #4f46e5;
+        --danger: #f87171;
+        --border: rgba(148, 163, 184, 0.25);
+    }
+
+    .register-page {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 2rem 1rem;
+        background: radial-gradient(1200px 600px at 10% 10%, #1d4ed8 0%, transparent 50%),
+                                radial-gradient(1000px 500px at 90% 90%, #7c3aed 0%, transparent 50%),
+                                linear-gradient(135deg, var(--bg1), var(--bg2));
+    }
+
+    .register-card {
+        width: 100%;
+        max-width: 460px;
+        background: var(--card);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        padding: 1.6rem;
+        color: var(--text);
+    }
+
+    .register-title {
+        margin: 0 0 .25rem;
+        font-size: 1.6rem;
+        font-weight: 700;
+    }
+
+    .register-subtitle {
+        margin: 0 0 1.2rem;
+        color: var(--muted);
+        font-size: .95rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: .4rem;
+        font-size: .9rem;
+        color: #cbd5e1;
+    }
+
+    .form-help {
+        display: block;
+        margin-top: .4rem;
+        color: var(--muted);
+        font-size: .8rem;
+        line-height: 1.35;
+    }
+
+    .errorlist {
+        list-style: none;
+        margin: .35rem 0 0;
+        padding: 0;
+        color: var(--danger);
+        font-size: .85rem;
+    }
+
+    .register-card input,
+    .register-card select,
+    .register-card textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        background: rgba(15, 23, 42, 0.7);
+        color: var(--text);
+        border-radius: 10px;
+        padding: .72rem .85rem;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+
+    .register-card input:focus,
+    .register-card select:focus,
+    .register-card textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        background: rgba(15, 23, 42, 0.9);
+    }
+
+    .btn-register {
+        width: 100%;
+        border: none;
+        border-radius: 10px;
+        padding: .8rem 1rem;
+        font-weight: 600;
+        color: white;
+        background: var(--accent);
+        cursor: pointer;
+        transition: transform .06s ease, background .2s ease;
+    }
+
+    .btn-register:hover { background: var(--accent-hover); }
+    .btn-register:active { transform: translateY(1px); }
+
+    .non-field-errors {
+        margin-bottom: 1rem;
+        color: var(--danger);
+        font-size: .9rem;
+    }
+    </style>
+    <div class="register-page">
+        <div class="register-card">
+            <h1 class="register-title">Create your account</h1>
+            <p class="register-subtitle">Start in seconds with a clean and secure sign-up flow.</p>
+            <form action="{% url 'users:register' %}" method="post" novalidate>
+                {% csrf_token %}
+                {% if form.non_field_errors %}<div class="non-field-errors">{{ form.non_field_errors }}</div>{% endif %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}<small class="form-help">{{ field.help_text|safe }}</small>{% endif %}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn-register">Create account</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

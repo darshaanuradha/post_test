@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4: The Django ORM & Shell</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --django-green: #0C4B33;
+            --django-light: #44B78B;
+            --bg-color: #F4F5F7;
+            --card-bg: #FFFFFF;
+            --text-main: #2D3748;
+            --text-muted: #718096;
+            --code-bg: #1A202C;
+            --code-text: #E2E8F0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: var(--django-green);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .step-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--django-light);
+            transition: transform 0.2s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .step-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.4rem;
+            color: var(--django-green);
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #E2E8F0;
+            padding-bottom: 10px;
+        }
+
+        .step-number {
+            background-color: var(--django-light);
+            color: white;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        p {
+            margin: 0 0 15px 0;
+        }
+
+        ul {
+            margin: 0 0 15px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background-color: #EDF2F7;
+            color: #DD6B20;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95em;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .info-box {
+            background-color: #E6FFFA;
+            border: 1px solid #319795;
+            color: #234E52;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .info-box strong {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Chapter 4: The Django ORM & Shell</h1>
+            <p>A guide to interacting with your database using Python.</p>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><span class="step-number">1</span> Environment Setup & Starting the Shell</h2>
+            <p>Open your terminal in VS Code and activate your virtual environment:</p>
+            <ul>
+                <li><strong>Windows:</strong> <code>source .venv/scripts/activate</code></li>
+                <li><strong>Mac/Linux:</strong> <code>source .venv/bin/activate</code></li>
+            </ul>
+            <p>Navigate into your top-level project folder by typing:</p>
+            <pre><code>cd myproject</code></pre>
+            <p>Start the interactive console to interact with your database by typing:</p>
+            <pre><code>py manage.py shell</code></pre>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><span class="step-number">2</span> Exploring the Django ORM</h2>
+            <div class="info-box">
+                <strong>📝 Note:</strong> Django uses an ORM (Object Relational Mapping), which acts as an intermediary
+                so you can execute Python code to carry out actions on your database tables.
+            </div>
+            <p>To interact with the model you created in Chapter 3, you first need to import it into the shell. Type:
+            </p>
+            <pre><code>from posts.models import Post</code></pre>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><span class="step-number">3</span> Creating and Saving Data</h2>
+            <p>Follow these steps in the shell to create a database entry:</p>
+            <ul>
+                <li>Create a new instance of your post model: <code>p = Post()</code></li>
+                <li>Assign a title to this instance: <code>p.title = 'my first post!'</code></li>
+                <li>Save this post instance into your database by running the method: <code>p.save()</code></li>
+                <li>To retrieve all posts saved in your database, type: <code>Post.objects.all()</code></li>
+            </ul>
+            <p>It will return a QuerySet displaying something generic like
+                <code>&lt;QuerySet [&lt;Post: Post object (1)&gt;]&gt;</code>.</p>
+            <p>Exit the interactive shell by typing <code>exit()</code>.</p>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><span class="step-number">4</span> Customizing Model Representation</h2>
+            <p>Because the generic <code>Post object (1)</code> string is not very readable, you can customize how the
+                model is represented.</p>
+            <p>Open your <code>models.py</code> file inside the <code>posts</code> app. Inside your <code>Post</code>
+                class, create a string method:</p>
+            <pre><code>    def __str__(self):
+        return self.title</code></pre>
+            <div class="info-box">
+                <strong>💡 Tip:</strong> Save the file. You do <strong>not</strong> need to make a migration for this
+                change because it does not alter the actual database schema, just how the data is displayed in Python.
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><span class="step-number">5</span> Testing the Updates</h2>
+            <p>Open the terminal and start the shell again using <code>py manage.py shell</code>.</p>
+            <p>Import the model once more:</p>
+            <pre><code>from posts.models import Post</code></pre>
+            <p>Create another new post to test:</p>
+            <pre><code>p = Post()
+p.title = 'this is my second post'
+p.save()</code></pre>
+            <p>Run <code>Post.objects.all()</code> to see the contents of your database. You should now receive a
+                QuerySet that displays the actual text titles you assigned to the posts (e.g., <em>'my first post!'</em>
+                and <em>'this is my second post'</em>).</p>
+            <p>Type <code>exit()</code> to leave the shell once you are finished.</p>
+        </div>
+
+    </div>
+</body>
+
+</html>

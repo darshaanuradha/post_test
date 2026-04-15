@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}
+    {{ post.title }} - Posts
+{% endblock title %}
+{% block content %}
+    <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+        <!-- Hero Banner -->
+        <div class="relative w-full h-96 overflow-hidden bg-gray-200">
+            <img src="{{ post.banner.url }}"
+                 alt="{{ post.title }}"
+                 width="1200"
+                 height="400"
+                 class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+        </div>
+        <!-- Content -->
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <!-- Post Header -->
+            <article class="space-y-6">
+                <div class="space-y-4">
+                    <h1 class="text-5xl font-bold text-gray-900 leading-tight">{{ post.title }}</h1>
+                    <div class="flex items-center space-x-4 text-gray-600">
+                        <time datetime="{{ post.date|date:'c' }}"
+                              class="flex items-center space-x-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h1A2.75 2.75 0 0118 6.75v10.5A2.75 2.75 0 0115.25 20H4.75A2.75 2.75 0 012 17.25V6.75A2.75 2.75 0 014.75 4h1V2.75A.75.75 0 015.75 2zm9.5 4H4.75c-.69 0-1.25.56-1.25 1.25v10.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V7.25c0-.69-.56-1.25-1.25-1.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span>{{ post.date|date:"F d, Y" }}</span>
+                        </time>
+                    </div>
+                </div>
+                <!-- Divider -->
+                <hr class="border-gray-200">
+                <!-- Post Body -->
+                <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                    <p>{{ post.body }}</p>
+                </div>
+            </article>
+            <!-- Back Link -->
+            <div class="mt-12 pt-8 border-t border-gray-200">
+                <a href="{% url 'post:list' %}"
+                   class="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-800 font-medium transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span>Back to Posts</span>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

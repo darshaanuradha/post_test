@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 10 notes on Django authentication, user logout, login redirects, and routing with protected pages using decorators.">
+    <meta name="keywords" content="Django, authentication, routing, login, logout, decorators, authentication">
+    <title>Chapter 10: Django Authentication and Routing Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        h2 {
+            color: #2980b9;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            color: #16a085;
+            margin-bottom: 5px;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+
+        code {
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Chapter 10 Notes</h1>
+
+    <h2>1. Setting up the Logout URL and View</h2>
+    <p>Open <code>urls.py</code> in your users app and set up the logout path. Then, create the view to handle the
+        logic.</p>
+
+    <h3><code>users/urls.py</code></h3>
+    <pre><code>from django.urls import path
+from . import views
+
+app_name = 'users'
+
+urlpatterns = [
+    # ... your other paths ...
+    path('logout/', views.logout_view, name='logout'),
+]</code></pre>
+
+    <h3><code>users/views.py</code></h3>
+    <pre><code>from django.shortcuts import render, redirect
+from django.contrib.auth import logout
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('posts:list')
+</code></pre>
+
+    <h2>2. Adding a Logout Button to the Navigation</h2>
+    <p>Because logging out should be done via a POST request for security, you must use a form rather than a standard
+        link. Add an HTML form element to your navigation menu in your master layout.</p>
+
+    <h3><code>templates/layout.html</code></h3>
+    <pre><code>&lt;!-- Inside your navigation menu --&gt;
+&lt;form action="{% url 'users:logout' %}" method="POST" style="display:inline;"&gt;
+    {% csrf_token %}
+    &lt;button type="submit"&gt;Log out&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+    <h2>3. Creating a "New Post" Route and Template</h2>
+    <p>Ensure you place the new-post path <em>above</em> your slug path, or Django will mistakenly try to interpret
+        'new-post' as a post slug.</p>
+
+    <h3><code>posts/urls.py</code></h3>
+    <pre><code>from django.urls import path
+from . import views
+
+app_name = 'posts'
+
+urlpatterns = [
+    # ... other paths ...
+    path('new-post/', views.post_new, name='new-post'),
+    path('&lt;slug:slug&gt;/', views.post_detail, name='post-detail'),
+]</code></pre>
+
+    <h3><code>posts/views.py</code></h3>
+    <pre><code>from django.shortcuts import render
+
+def post_new(request):
+    return render(request, 'posts/post_new.html')</code></pre>
+
+    <h3><code>posts/templates/posts/post_new.html</code></h3>
+    <pre><code>{% extends 'layout.html' %}
+
+{% block content %}
+    &lt;h1&gt;Create a New Post&lt;/h1&gt;
+    &lt;!-- Future form will go here --&gt;
+{% endblock %}</code></pre>
+
+    <h2>4. Protecting Pages with the Login Required Decorator</h2>
+    <p>To ensure only registered users can access the new post page, add the <code>@login_required</code> decorator to
+        your view.</p>
+
+    <h3><code>posts/views.py</code> (Updated)</h3>
+    <pre><code>from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+@login_required(login_url="/users/login/")
+def post_new(request):
+    return render(request, 'posts/post_new.html')</code></pre>
+
+    <h2>5. Handling the "Next" Redirect Parameter</h2>
+    <p>When a user is redirected by the decorator, Django appends a <code>?next=</code> parameter to the URL to remember
+        where they were trying to go. Pass this through your login form.</p>
+
+    <h3><code>users/templates/users/login.html</code></h3>
+    <pre><code>&lt;form action="{% url 'users:login' %}" method="POST"&gt;
+    {% csrf_token %}
+    &lt;!-- Your username and password inputs go here --&gt;
+
+    {% if request.GET.next %}
+        &lt;input type="hidden" name="next" value="{{ request.GET.next }}"&gt;
+    {% endif %}
+    
+    &lt;button type="submit"&gt;Log in&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+    <h3><code>users/views.py</code> (Login View Update)</h3>
+    <pre><code># Inside your login_view, after successful authentication...
+# login(request, user)
+
+if 'next' in request.POST:
+    return redirect(request.POST.get('next'))
+else:
+    return redirect('posts:list')</code></pre>
+
+    <h2>6. Conditionally Displaying Navigation Links</h2>
+    <p>Dynamically update the navigation bar based on the user's login status using Django template conditionals.</p>
+
+    <h3><code>templates/layout.html</code></h3>
+    <pre><code>&lt;nav&gt;
+    &lt;a href="{% url 'posts:list' %}"&gt;Home&lt;/a&gt;
+
+    {% if user.is_authenticated %}
+        &lt;a href="{% url 'posts:new-post' %}"&gt;New Post&lt;/a&gt;
+        
+        &lt;form action="{% url 'users:logout' %}" method="POST" style="display:inline;"&gt;
+            {% csrf_token %}
+            &lt;button type="submit"&gt;Log out&lt;/button&gt;
+        &lt;/form&gt;
+        
+    {% else %}
+        &lt;a href="{% url 'users:register' %}"&gt;User Registration&lt;/a&gt;
+        &lt;a href="{% url 'users:login' %}"&gt;Login&lt;/a&gt;
+        
+    {% endif %}
+&lt;/nav&gt;</code></pre>
+
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Project Setup Guide</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .note-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h2 {
+            color: #2980b9;
+            font-size: 1.25rem;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 12px;
+        }
+        code {
+            background: #f4f6f7;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: ui-monospace, monospace;
+            font-size: 0.9em;
+            color: #c0392b;
+            border: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="note-container">
+        <h1>Django Project Setup Guide</h1>
+
+        <section>
+            <h2>1. Prerequisites & Initial Setup</h2>
+            <ul>
+                <li>Ensure you have learned the basics of Python and have a code editor installed, such as Visual Studio Code (VS Code).</li>
+                <li>Ensure you have Python installed (can be downloaded from <code>python.org</code>).</li>
+                <li>Create a new folder for your project (e.g., <code>lesson one</code>) and open it in VS Code.</li>
+                <li>Open a terminal window in VS Code using <code>Ctrl + `</code> (control and the backtick).</li>
+                <li>Verify your Python installation by checking the version. Type <code>py --version</code> on Windows, or <code>python3 --version</code> on Mac/Linux.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>2. Virtual Environment & Django Installation</h2>
+            <ul>
+                <li>Create a virtual environment by typing <code>py -m venv .venv</code> (or <code>python3</code> instead of <code>py</code>).</li>
+                <li>Activate the virtual environment. On Windows, type <code>source .venv/scripts/activate</code>. On Mac or Linux, type <code>source .venv/bin/activate</code>. You will see <code>(.venv)</code> appear in the terminal prompt when successful.</li>
+                <li>Install Django by typing <code>py -m pip install Django</code> (use a capital "D"). You may also optionally upgrade pip if prompted.</li>
+                <li>Verify the installation by opening the Python REPL (type <code>py</code>), then typing <code>import django</code> followed by <code>print(django.__version__)</code>. Exit the REPL by typing <code>quit()</code>.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. Creating the Project & Running the Server</h2>
+            <ul>
+                <li>Create the project by typing <code>django-admin startproject myproject</code> (replace <code>myproject</code> with your desired name).</li>
+                <li>Navigate into your newly created project folder by typing <code>cd myproject</code>.</li>
+                <li>Start the server to ensure everything is working by typing <code>py manage.py runserver</code>.</li>
+                <li>Open a web browser and go to <code>localhost:8000</code> (or <code>http://127.0.0.1:8000</code>) to see the default Django success page.</li>
+                <li>Stop the server in the terminal by pressing <code>Ctrl + C</code>.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>4. Configuring Views and URLs</h2>
+            <ul>
+                <li>Open the <code>urls.py</code> file inside the inner <code>myproject</code> folder. Add new empty paths to the <code>urlpatterns</code> list for your homepage (<code>path('', ...)</code>) and an about page (<code>path('about/', ...)</code>).</li>
+                <li>Create a new file called <code>views.py</code> in the same directory.</li>
+                <li>Inside <code>views.py</code>, add <code>from django.http import HttpResponse</code>. Create two functions, <code>homepage</code> and <code>about</code>, that return simple text messages using <code>HttpResponse</code>.</li>
+                <li>Go back to <code>urls.py</code> and import the views using <code>from . import views</code>. Link the views to the paths you created by adding <code>views.homepage</code> and <code>views.about</code> to the respective path patterns.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>5. Creating HTML Templates</h2>
+            <ul>
+                <li>At the top level of your <code>myproject</code> folder (alongside the <code>manage.py</code> file), create a new directory named <code>templates</code>.</li>
+                <li>Inside this directory, create two HTML files: <code>home.html</code> and <code>about.html</code>. Add basic HTML content (like <code>&lt;h1&gt;</code> tags) and use an anchor tag (<code>&lt;a&gt;</code>) in each file to link to the other page.</li>
+                <li>Open <code>settings.py</code> (located in the inner <code>myproject</code> folder), scroll down to the <code>TEMPLATES</code> section, and add <code>'templates'</code> inside the <code>DIRS</code> list so Django knows where to find them.</li>
+                <li>Open <code>views.py</code> and change the import to <code>from django.shortcuts import render</code>. Change the return statements in your functions to use the <code>render</code> function instead of <code>HttpResponse</code>, passing in the request and the template names (e.g., <code>return render(request, 'home.html')</code>).</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>6. Adding Static Files (CSS and JavaScript)</h2>
+            <ul>
+                <li>At the top level of your project (alongside the <code>templates</code> directory), create a new folder named <code>static</code>.</li>
+                <li>Inside <code>static</code>, create a <code>css</code> folder containing a <code>style.css</code> file, and a <code>js</code> folder containing a <code>main.js</code> file. Add some basic CSS styles and a simple <code>console.log()</code> statement to test them.</li>
+                <li>Open <code>settings.py</code> and add <code>import os</code> at the very top. Scroll to the bottom and add a new setting: <code>STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]</code>.</li>
+                <li>Finally, update your HTML templates to use the Django templating engine. Add <code>{% load static %}</code> just below the <code>&lt;!DOCTYPE html&gt;</code> declaration.</li>
+                <li>Link your stylesheet in the HTML <code>&lt;head&gt;</code> using <code>{% static 'css/style.css' %}</code> in the <code>href</code> attribute. Link your JavaScript file using a <code>&lt;script defer&gt;</code> tag with <code>{% static 'js/main.js' %}</code> in the <code>src</code> attribute.</li>
+            </ul>
+        </section>
+    </div>
+
+</body>
+</html>

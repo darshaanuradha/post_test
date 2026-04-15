@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 9: User Login & Auto-Login</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 35px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: #e06c75;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        .step-number {
+            background-color: #3498db;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .highlight-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #0c5460;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Chapter 9: User Login & Auto-Login</h1>
+        <p>This chapter covers how to create a secure user login system using Django's built-in authentication forms,
+            and how to improve user experience by auto-logging users in immediately after they register.</p>
+
+        <section>
+            <h2><span class="step-number">1</span> Updating the Navigation Bar</h2>
+            <p>Open your master <code>layout.html</code> template. Copy the navigation link you made for user
+                registration and paste it directly underneath to create a new link for the login page.</p>
+            <pre><code>&lt;!-- Inside layout.html navigation menu --&gt;
+&lt;a href="{% url 'posts:list' %}"&gt;Home&lt;/a&gt;
+&lt;a href="{% url 'users:register' %}"&gt;Register&lt;/a&gt;
+&lt;!-- New Login Link --&gt;
+&lt;a href="{% url 'users:login' %}"&gt;User Login 🔒&lt;/a&gt;</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">2</span> Configuring Login URLs</h2>
+            <p>Open the <code>urls.py</code> file inside your <strong>users</strong> app. Add a new path for the login
+                view.</p>
+            <pre><code># Inside users/urls.py
+urlpatterns = [
+    path('register/', views.register_view, name='register'),
+    # New Login Path
+    path('login/', views.login_view, name='login'),
+]</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">3 & 4</span> Setting Up the Login View & Form Logic</h2>
+            <p>Open <code>views.py</code> inside the users app. Import the built-in <code>AuthenticationForm</code> and
+                the <code>login</code> function. Then, create the <code>login_view</code> to handle POST and GET
+                requests.</p>
+
+            <div class="highlight-box">
+                <strong>Note:</strong> Unlike the registration form, the authentication form requires you to explicitly
+                name the data argument: <code>form = AuthenticationForm(data=request.POST)</code>.
+            </div>
+
+            <pre><code>from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login
+
+def login_view(request):
+    if request.method == 'POST':
+        # Explicitly pass data argument
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            # Retrieve the authenticated user
+            user = form.get_user()
+            # Log the user in
+            login(request, user)
+            return redirect('posts:list')
+    else:
+        # GET request: empty form
+        form = AuthenticationForm()
+        
+    return render(request, 'users/login.html', { 'form': form })</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">5</span> Creating the Login Template</h2>
+            <p>Inside your <code>users/templates/users</code> directory, copy your <code>register.html</code> file and
+                name the new file <code>login.html</code>. Update the title, heading, and form action.</p>
+            <pre><code>{% extends 'layout.html' %}
+
+{% block content %}
+    &lt;h1&gt;User Login&lt;/h1&gt;
+    
+    &lt;!-- Update the action URL --&gt;
+    &lt;form action="{% url 'users:login' %}" method="POST"&gt;
+        {% csrf_token %}
+        {{ form }}
+        &lt;button type="submit"&gt;Login&lt;/button&gt;
+    &lt;/form&gt;
+{% endblock %}</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="step-number">6</span> Auto-Login on Registration</h2>
+            <p>To prevent users from having to log in manually right after creating an account, update your existing
+                <code>register_view</code> function in <code>views.py</code>. Because <code>form.save()</code> returns
+                the created user object, you can pass it directly into the login function.</p>
+            <pre><code># Inside views.py -> update the existing register_view
+
+def register_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST) 
+        if form.is_valid():
+            # NEW: Log the user in immediately using the saved user object
+            login(request, form.save()) 
+            return redirect('posts:list')
+    else:
+        form = UserCreationForm() 
+        
+    return render(request, 'users/register.html', { 'form': form })</code></pre>
+        </section>
+    </div>
+
+</body>
+
+</html>
