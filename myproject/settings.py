@@ -26,7 +26,10 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-local-dev-key-only")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # Dynamically loads allowed hosts from .env (e.g., "103.253.145.64,yourdomain.com")
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+if DEBUG:
+    ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+else:
+    ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 
 # ==========================================

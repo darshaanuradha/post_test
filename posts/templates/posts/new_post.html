@@ -3,12 +3,36 @@
     Create a New Post
 {% endblock title %}
 {% block content %}
-    <h1>Create a New Post</h1>
-    <form method="post"
-          action="{% url 'post:new-post' %}"
-          enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Create Post</button>
-    </form>
+    <div class="bg-gray-50 flex items-center justify-center px-4 py-2">
+        <div class="w-full max-w-2xl bg-white rounded-2xl shadow-lg border border-gray-100">
+            <!-- Header -->
+            <div class="px-8 py-6 border-b">
+                <h1 class="text-2xl font-bold text-gray-800">Create New Post</h1>
+                <p class="text-sm text-gray-500 mt-1">Share your thoughts with the community</p>
+            </div>
+            <!-- Form -->
+            <form method="post"
+                  action="{% url 'post:new-post' %}"
+                  enctype="multipart/form-data"
+                  class="px-8 py-6 space-y-5">
+                {% csrf_token %}
+                <!-- Render fields manually for better control -->
+                {% for field in form %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors|striptags }}</p>{% endif %}
+                        {% if field.help_text %}<p class="text-gray-400 text-xs mt-1">{{ field.help_text }}</p>{% endif %}
+                    </div>
+                {% endfor %}
+                <!-- Submit Button -->
+                <div class="pt-4">
+                    <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl shadow-md transition duration-200">
+                        Publish Post
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock content %}
