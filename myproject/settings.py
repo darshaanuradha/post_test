@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-keo854zatj&e%t1%nfyq+v&zxssm#mm*t#tmxl^l&h2)$y!08#
 DEBUG = False
 
 # ALLOWED_HOSTS: List of hosts/domains that Django will serve. Empty list allows all in development
-ALLOWED_HOSTS = ["http://168.144.39.187/", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["168.144.39.187", "localhost", "127.0.0.1"]
 
 
 # Application definition
