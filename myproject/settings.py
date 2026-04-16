@@ -23,7 +23,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-local-dev-key-only")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Expects exactly "True" in the .env file to enable debug mode
-DEBUG = os.getenv("DEBUG")
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # Dynamically loads allowed hosts from .env (e.g., "103.253.145.64,yourdomain.com")
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
