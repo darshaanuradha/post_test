@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",  # Session management
     "django.contrib.messages",  # Messaging framework for user notifications
     "django.contrib.staticfiles",  # Static files handler (CSS, JS, Images)
-    "django_browser_reload",  # Third-party app for live browser reloading during development
+    # "django_browser_reload",
     "posts",  # Custom app for blog posts
     "users",  # Custom app for user management
 ]
@@ -51,7 +51,7 @@ INTERNAL_IPS = [
 ]
 # MIDDLEWARE: List of middleware classes that process requests/responses
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",  # Adds security headers
     "django.contrib.sessions.middleware.SessionMiddleware",  # Manages sessions
     "django.middleware.common.CommonMiddleware",  # Handling common tasks
